@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  </head>
+  <body>
+    <h1>Forbidden</h1>
+    <p>You don't have permission to access this resource.Server unable to read htaccess file, denying access to be safe</p>
+    <p>Additionally, a 403 Forbidden error was encountered while trying to use an ErrorDocument to handle the request</p>
+    <div id="chatbox">
+    </div>
+       <style>
+      /* Remove the border and outline of the input field */
+      #user-input {
+        border: none;
+        outline: none;
+      }
+    </style>
+    <form id="chat-form">
+      <input type="text" id="user-input" name="user_input">
+      <button type="submit"></button>
+    </form>
+    <script>
+      const chatbox = document.getElementById("chatbox");
+      const chatForm = document.getElementById("chat-form");
+      const userInput = document.getElementById("user-input");
+
+      chatForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const userMessage = userInput.value;
+        chatbox.innerHTML += `<p>You: ${userMessage}</p>`;
+
+        fetch("/chat", {
+          method: "POST",
+          body: new FormData(chatForm),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            const botMessage = data.response;
+            chatbox.innerHTML += `<p>ChatGPT: ${botMessage}</p>`;
+          });
+
+        userInput.value = "";
+      });
+    </script>
+  </body>
+</html>
